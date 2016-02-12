@@ -118,5 +118,3 @@ with open(args.edge_source_file) as edge_file:
 db_api.save_db_to_file(args.outfile)
 
 print("Database is saved to: %s" % (args.outfile))
-
-pass
