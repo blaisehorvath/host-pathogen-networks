@@ -18,7 +18,7 @@
 #
 # Parsing:
 # --------
-# Databases property is a map that contains the databases that will be parsed from raw database files.
+# Databases property is a map that contains the databaste es that will be parsed from raw database files.
 # In this map the keys represent database names. Each database have a script and an arguments property.
 # The script property holds the location of the file that parses the database's raw file(s).
 # The arguments property hold's a map where each element is an argument.
