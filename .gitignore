@@ -30,11 +30,13 @@ var/
 /source_files
 /output/signalink_rho.db
 #  Usually these files are written by a python script from a template
+/output/arn.db
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
 # Installer logs
+/output/prediction.db
 pip-log.txt
 pip-delete-this-directory.txt
 
