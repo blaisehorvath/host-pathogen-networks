@@ -42,8 +42,8 @@ with open(args.source_file) as source_file:
         if salmonella_uniprot not in nodes:
 
             salmonella_node = {
-                'name' : salmonella_uniprot,
-                'alt_accession' : salmonella_gene_symbol,
+                'name' : "uniprot:"+salmonella_uniprot,
+                'alt_accession' : "gene symbol:"+salmonella_gene_symbol,
                 'tax_id' : "taxid:99284",
                 'pathways' : "",
                 'aliases' : "",
@@ -57,8 +57,8 @@ with open(args.source_file) as source_file:
         if human_uniprot not in nodes:
 
             human_node = {
-                'name' : human_uniprot,
-                'alt_accession' : human_gene_symbol,
+                'name' : "uniprot:"+human_uniprot,
+                'alt_accession' : "gene symbol:"+human_gene_symbol,
                 'tax_id' : "taxid:9606",
                 'pathways' : "",
                 'aliases' : "",

@@ -57,7 +57,7 @@ with open(args.source_file) as source_file:
         if source_uniprot not in nodes:
 
             source = {
-                'name' : source_uniprot,
+                'name' : "uniprot:"+source_uniprot,
                 'alt_accession' : "",
                 'tax_id' : "taxid:99284",
                 'pathways' : "",
@@ -72,7 +72,7 @@ with open(args.source_file) as source_file:
         if target_uniprot not in nodes:
 
             target = {
-                'name' : target_uniprot,
+                'name' : "uniprot:"+target_uniprot,
                 'alt_accession' : "",
                 'tax_id' : "taxid:99284",
                 'pathways' : "",

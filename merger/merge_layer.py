@@ -1,16 +1,27 @@
-# setting up imports
+# imports
 import sqlite3
 import sys
 import os
 import re
+import argparse
+
+parser = argparse.ArgumentParser(description='Convert downloaded RNA files to Mitab SQLite')
+parser.add_argument('--source-files', required=True, metavar="SourceFiles", type=str, nargs='+',
+                    help="The location of the source files seperated by spaces.")
+parser.add_argument('--outfile', required=True, metavar="OutputFile", type=str,
+                    help="The name and optionally location where the data should be saved.")
+parser.add_argument('--psimisql', required=True, metavar="PsimiSQLLocation", type=str,
+                    help="The location of the PsimiSQL class")
+
+args = parser.parse_args()
 
 # adding the psimi_to_sql module to sys
-sys.path.append(sys.argv[1])
+sys.path.append(args.psimisql)
 from sqlite_db_api import PsimiSQL
 
 # declaring constants
-DESTINATION = sys.argv[2]
-SOURCE_DB_FILE_LIST = DB_LOCATION_LIST = sys.argv[3:len(sys.argv)]
+DESTINATION = args.outfile
+SOURCE_DB_FILE_LIST = DB_LOCATION_LIST = args.source_files
 
 print("The following dbs will be parsed: " + ", ".join(map(lambda (line): line.split("/")[-1], SOURCE_DB_FILE_LIST)))
 
@@ -102,7 +113,7 @@ def main():
         # executing a query that selects everything (but the node id) from the current SQLite .db file
         db = sqlite3.connect(db_file)
         cursor = db.cursor()
-        cursor.execute("SELECT * FROM node WHERE tax_id = 'taxid:9606' OR tax_id = 'taxid:6239' OR tax_id = 'taxid:7227'")
+        cursor.execute("SELECT * FROM node WHERE tax_id = 'taxid:9606' OR tax_id = 'taxid:99284'")
 
         # iterating trough the db row by row
         while True:
@@ -159,63 +170,53 @@ def main():
                 # deconstructing the row (list)
                 edge_row_id, old_interactor_a_node_id, old_interactor_b_node_id, interactor_a_node_name, interactor_b_node_name, interaction_detection_method , first_author, publication_ids, interaction_types, source_db, interaction_identifiers, confidence_scores, layer = row
 
-                # because in the nodes dict building process the query only asks for human||drosophila||celegans nodes
-                # we have to make sure that we don't try to insert edges whose nodes are in the nodes dict (=does not contain any other organisms node)
+                # because in the nodes dict building process the query only asks for human and salmonella nodes
+                # we have to make sure that we don't try to insert edges whose
+                # nodes are in the nodes dict (=does not a node of other organism)
                 if nodes.has_key(interactor_a_node_name) and nodes.has_key(interactor_b_node_name):
 
                     # generating an edge id that will be the key in the edge dict
                     edge_id = interactor_a_node_name + "@" + interactor_b_node_name
 
-                    # generating an edge dict, that will be a value for the key
+                    # generating an edge dict, that will be a value for the key in the collected_edges dict
                     current_edge = {
-                        'interaction_detection_method' : interaction_detection_method,
-                        'first_author' : first_author,
-                        'publication_ids' : publication_ids,
-                        'interaction_types' : interaction_types,
-                        'source_db' : source_db,
-                        'interaction_identifiers' : interaction_identifiers,
-                        'confidence_scores' : confidence_scores,
-                        'layer' : layer
+                        'interaction_detection_method': interaction_detection_method,
+                        'first_author': first_author,
+                        'publication_ids': publication_ids,
+                        'interaction_types': interaction_types,
+                        'source_db': source_db,
+                        'interaction_identifiers': interaction_identifiers,
+                        'confidence_scores': confidence_scores,
+                        'layer': layer
                     }
 
-                    # if the edge dict does not have this edge_id. the edge is stored in the edge dict with it's id
+                    # if the collected_edges dict does not contain
+                    # this edge_id. the edge is stored in the collected edges
                     if not collected_edges.has_key(edge_id):
-                        collected_edges[edge_id] = []
-                        collected_edges[edge_id].append(current_edge)
+                        collected_edges[edge_id] = current_edge
                     else:
-                        # if the edge has this id, the array of edges is searched until the edge with the same interaction type found
-                        merged = False
-                        for collected_edge in collected_edges[edge_id]:
-                            # if an edge is already in the dict with the same interaction type, it will be merged with the current edge
-                            # 'already in' means that the two edges have the same effect in their interaction types
-                            if collected_edge['interaction_types'].split('|')[0]== current_edge['interaction_types'].split('|')[0]:
-                                collected_edge['first_author'] = merge_strings(collected_edge['first_author'],current_edge['first_author'])
-                                collected_edge['source_db'] = merge_strings(collected_edge['source_db'], current_edge['source_db'])
-                                collected_edge['interaction_identifiers'] = merge_strings(collected_edge['interaction_identifiers'], current_edge['interaction_identifiers'])
-                                collected_edge['interaction_detection_method'] = merge_strings(collected_edge['interaction_detection_method'], current_edge['interaction_detection_method'])
-                                collected_edge['confidence_scores'] = merge_strings(collected_edge['confidence_scores'], current_edge['confidence_scores'])
-                                merged = True
-                                merged_edge_counter += 1
-                                break
-                        if merged == False:
-                            # if current edge cannot be merged with an edge that is already in the edges dict, it will be appended to a new edge
-                            # todo: log this!!444!
-                            collected_edges[edge_id].append(current_edge)
-                            not_merged_edge += 1
-                            if collected_edge['source_db'] != current_edge['source_db']:
-                                pass
+                        # if collected_edges has this id the edge will be merged
+                        collected_edge = collected_edges[edge_id]
+
+                        # if an edge is already in the dict it will be merged with the current edge
+                        collected_edge['interaction_types'] = merge_strings(collected_edge['interaction_types'],current_edge['interaction_types'])
+                        collected_edge['first_author'] = merge_strings(collected_edge['first_author'],current_edge['first_author'])
+                        collected_edge['source_db'] = merge_strings(collected_edge['source_db'], current_edge['source_db'])
+                        collected_edge['interaction_identifiers'] = merge_strings(collected_edge['interaction_identifiers'], current_edge['interaction_identifiers'])
+                        collected_edge['interaction_detection_method'] = merge_strings(collected_edge['interaction_detection_method'], current_edge['interaction_detection_method'])
+                        collected_edge['confidence_scores'] = merge_strings(collected_edge['confidence_scores'], current_edge['confidence_scores'])
+
     print("Building edge dict done!")
     print("Started inserting edges to the db")
     # iterating through edges dictionary and inserting nodes to the SQLite db
-    for k, v in collected_edges.iteritems():
-        for edge_to_insert in v:
-            # getting the nodes
-            node_a, node_b = k.split('@')
+    for collected_edge_id, edge_to_insert in collected_edges.iteritems():
+        # getting the nodes
+        node_a, node_b = collected_edge_id.split('@')
 
-            node_a_dict = nodes[node_a]
-            node_b_dict = nodes[node_b]
+        node_a_dict = nodes[node_a]
+        node_b_dict = nodes[node_b]
 
-            parser.insert_edge(node_a_dict, node_b_dict, edge_to_insert)
+        parser.insert_edge(node_a_dict, node_b_dict, edge_to_insert)
 
     print("Saving db")
     parser.save_db_to_file(DESTINATION)

@@ -44,8 +44,8 @@ with open(args.source_file) as arn_file:
         if source_name not in nodes:
 
             source = {
-                'name' : source_name,
-                'alt_accession' : linearr[0],
+                'name' : "uniprot:"+source_name,
+                'alt_accession' : "gene symbol:"+linearr[0],
                 'tax_id' : "taxid:"+linearr[2],
                 'pathways' : linearr[7],
                 'aliases' : "",
@@ -64,8 +64,8 @@ with open(args.source_file) as arn_file:
         if target_name not in nodes:
 
             target = {
-                'name' : target_name,
-                'alt_accession' : linearr[8],
+                'name' : "uniprot:"+target_name,
+                'alt_accession' : "gene symbol:"+linearr[8],
                 'tax_id' : "taxid:"+linearr[10],
                 'pathways' : linearr[15],
                 'aliases' : "",
