@@ -5,9 +5,9 @@ import os
 import re
 import argparse
 
-parser = argparse.ArgumentParser(description='Convert downloaded RNA files to Mitab SQLite')
+parser = argparse.ArgumentParser(description='Merge psimisql databases.')
 parser.add_argument('--source-files', required=True, metavar="SourceFiles", type=str, nargs='+',
-                    help="The location of the source files seperated by spaces.")
+                    help="The location of source files separated by spaces.")
 parser.add_argument('--outfile', required=True, metavar="OutputFile", type=str,
                     help="The name and optionally location where the data should be saved.")
 parser.add_argument('--psimisql', required=True, metavar="PsimiSQLLocation", type=str,
