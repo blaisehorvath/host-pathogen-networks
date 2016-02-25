@@ -237,7 +237,7 @@ def main():
             result = DICTIONARY_DB_CURSOR.fetchall()
 
             if len(result) == 0:
-                # if ther is no match in the map for the current node
+                # if there is no match in the map for the current node
                 no_match_counter+=1
             else:
                 # get a list with only the swissprot nodes from the result of the SQL query
