@@ -44,21 +44,33 @@ pip-delete-this-directory.txt
 htmlcov/
 .tox/
 .coverage
+/output/dictionary.db
 .coverage.*
 .cache
 nosetests.xml
 coverage.xml
 /output/salmonet.db
+/output/merged.db
 *,cover
 .hypothesis/
 
 # Translations
+/dictionary_builder/node_modules
+/dictionary_builder/salmonella_uniprot.xml
+/dictionary_builder/dictionary.db
 *.mo
 *.pot
+/output/mappedarn.db
 
 # Django stuff:
 *.log
 
+/output/mappedsalmonet.db
+/output/mappedprediction.db
+/output/mappedsignalink_rho.db
+/dictionary_builder/human_salmonella.xml
+/dictionary_builder/testdict.db
+/dictionary_builder/streamUniprotXML.js
 # Sphinx documentation
 docs/_build/
 
