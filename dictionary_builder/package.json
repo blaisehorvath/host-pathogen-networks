@@ -1,0 +1,17 @@
+{
+  "name": "dictionary_builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "parsToDBformat.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sqlite3": "^3.0.8",
+    "stream-bandwidth": "0.0.2",
+    "underscore": "^1.8.3",
+    "xml-stream": "^0.4.5"
+  }
+}
