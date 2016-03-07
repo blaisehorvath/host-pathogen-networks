@@ -49,6 +49,9 @@ def main():
 
     for db in args.source_files:
 
+        # informing the user
+        print("Parsing %s" % db)
+
         cursor = sqlite3.connect(db).cursor()
 
         mapped_nodes = {}
@@ -57,13 +60,25 @@ def main():
         cursor.execute("SELECT * FROM node")
         result = cursor.fetchall()
 
+        length = len(result)
+        current = 1
+
         new_db = PsimiSQL()
 
         cursor.execute("SELECT count(*) FROM node")
         num_of_nodes = cursor.fetchone()[0]
 
         # mapping nodes
+
+        print("Mapping nodes")
+
         for line in result:
+
+            # informing user
+            if (current % 50 == 0):
+                print("Mapping nodes %d/%d" % (current, length))
+
+            current += 1
 
             row_id, name, alt_accession, tax_id, pathways, aliases, topology = line
 
@@ -95,7 +110,16 @@ def main():
         cursor.execute("SELECT * FROM edge")
         result = cursor.fetchall()
 
+        print("Mapping edges")
+        length = len(result)
+        current = 1
+        shit_counter = 0
+
         for row in result:
+
+            if (current % 10 == 0):
+               print("Parsing edge %d/%d" % (current, length))
+            current += 1
 
             old_source_uniprot = row[3]
             old_target_uniprot = row[4]
@@ -112,19 +136,20 @@ def main():
                 'layer': "0"
             }
 
-            new_db.insert_edge(mapped_nodes[old_source_uniprot], mapped_nodes[old_target_uniprot], edge_dict)
+            if (old_source_uniprot not in mapped_nodes or old_target_uniprot not in mapped_nodes):
+                shit_counter +=1
+            else:
+                new_db.insert_edge(mapped_nodes[old_source_uniprot], mapped_nodes[old_target_uniprot], edge_dict)
 
-        # saving the mapped db
+        # saving the mapped db and informing user
 
         db_name = os.path.split(db)[1]
+
+        print("Saving db to %s " % (args.outdir+"/mapped"+db_name))
+        print("SHITCOUNTER %d" % shit_counter )
 
         new_db.save_db_to_file(args.outdir+"/mapped"+db_name)
 
 
-
-
 if __name__ == '__main__':
     main()
-
-
-pass
