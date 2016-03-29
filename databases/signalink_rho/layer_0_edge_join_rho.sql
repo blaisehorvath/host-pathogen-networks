@@ -2,4 +2,4 @@ SELECT edge.id, edge.interactor_a_node_id, edge.interactor_b_node_id, edge.inter
 FROM edge
   JOIN node as source ON edge.interactor_a_node_id = source.id
   JOIN node as target ON edge.interactor_b_node_id = target.id
-WHERE (source.pathways LIKE "%Rho%") OR (target.pathways LIKE "%Rho%")
+WHERE (source.pathways LIKE "%Rho%") AND (target.pathways LIKE "%Rho%")

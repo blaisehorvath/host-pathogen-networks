@@ -28,10 +28,10 @@ db_api = PsimiSQL()
 
 # parsing nodes
 
-# nodes will be stored temporarily in memory, because re querying them is slower
+# nodes will be stored temporarily in memory, because re-querying them is slower
 nodes = {}
 
-# looping throgh the node file
+# looping through the node file
 with open(args.node_source_file) as node_file:
 
     # informing the user
@@ -42,7 +42,6 @@ with open(args.node_source_file) as node_file:
 
     # skipping header
     node_file.readline()
-
 
     # looping through the file
     for line in node_file:
@@ -73,7 +72,7 @@ with open(args.node_source_file) as node_file:
 
     print("Parsing nodes done.")
 
-# parsing edeges
+# parsing edges
 
 with open(args.edge_source_file) as edge_file:
 
