@@ -88,3 +88,17 @@ class TopologyAnalyser:
 
         return unitStrenghtDict
 
+    def pathFinder(self, depth, sourceNode, targetNode, path, collectedPathes):
+        if len(path) == 0:
+            depth -= 1
+        if depth == 0 and sourceNode == targetNode:
+            print path
+            collectedPathes.append(path)
+            return
+        if depth == 0 and sourceNode != targetNode:
+            return
+        for neighbourNode in self.getFirstNeighboursSet(sourceNode):
+            path.append(neighbourNode)
+            self.pathFinder(depth-1, neighbourNode, targetNode, path, collectedPathes)
+            path.pop(-1)
+
