@@ -113,6 +113,11 @@ class TopologyAnalyser:
             path.pop(-1)
 
     def getNthPathwaysForNodes(self, steps):
+        """
+        Finding path between all nodes with an exact number of steps.
+        :param steps:
+        :return: A dict
+        """
         pathways = {}
 
         for node in self.graph.nodes():
@@ -127,3 +132,67 @@ class TopologyAnalyser:
                 pathways[node] += collectedPathways
 
         return pathways
+
+    def getEdgesFromPathway(self, pathway):
+        """
+        This function returns the list of edges from a pathway
+        :param pathway:
+        :return:
+        """
+        nodeList = pathway.split('-')
+        edgeList = []
+
+        for i in range(0, len(nodeList)-1):
+            edgeList.append(nodeList[i]+"-"+nodeList[i+1])
+
+        return edgeList
+
+    def countPathwayStrength(self, pathway):
+        """
+        This function returns the strength of a pathway
+        :param pathway:
+        :return:
+        """
+        edges = self.getEdgesFromPathway(pathway)
+
+        product = 1
+
+        for edge in edges:
+            product *= self.edgeStrength[edge]
+
+        return product
+
+    def getPathWaysToNthNeighbours(self, node, n):
+        """
+        This function returns an array of
+        :param node:
+        :param n:
+        :return:
+        """
+        nthNeighbourList = self.getNthNeighbours(node, n - 1)
+        pathways = []
+
+        nthNeighbours = self.getNthNeighbours(node, n - 1)
+
+        for neighbour in nthNeighbours:
+            collectedPathways = []
+            self.pathFinder(n, node, neighbour, [], collectedPathways)
+            pathways += collectedPathways
+
+        return pathways
+
+    def countTI(self, node, n):
+        """
+        This function counts the TI of a node in the range of n.
+        :param node:
+        :param n: the length of the pathway (the number of nodes in the pathway)
+        :return:
+        """
+        pathways = self.getPathWaysToNthNeighbours(node, n)
+
+        ti = 0
+
+        for pathway in pathways:
+            ti += self.countPathwayStrength(pathway)
+
+        return ti

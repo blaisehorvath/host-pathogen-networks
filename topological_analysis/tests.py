@@ -1,5 +1,6 @@
 import unittest
 from analyser import TopologyAnalyser
+from fractions import Fraction
 
 edges = [
     'a-e',
@@ -26,7 +27,7 @@ class TestGraphAnalyser(unittest.TestCase):
         self.assertEqual(analyzer.getNthNeighbours('e',2), set(['e', 'f']))
         self.assertEqual(analyzer.getNthNeighbours('e', 1), set(['a','b','c']))
 
-    def testpathFinder(self):
+    def testPathFinder(self):
 
         paths = []
 
@@ -57,6 +58,20 @@ class TestGraphAnalyser(unittest.TestCase):
         self.assertEqual(len(pathways['e']), 5)
         self.assertEqual(len(pathways), 6)
 
+    def testGetEdgeList(self):
+        self.assertEqual(analyzer.getEdgesFromPathway('a-b-c'), ['a-b', 'b-c'])
+
+    def testcountPathwayStrength(self):
+        self.assertEqual(analyzer.countPathwayStrength('e-a-e'), Fraction('1/3'))
+        self.assertEqual(analyzer.countPathwayStrength('e-b-f'), Fraction('1/6'),)
+
+    def testGetNStepPathwaysForNode(self):
+        self.assertEqual(analyzer.getPathWaysToNthNeighbours('e',3), ['e-a-e', 'e-c-e', 'e-b-e', 'e-c-f', 'e-b-f'])
+
+    def testCountTI(self):
+        self.assertEqual(analyzer.countTI('e',3), Fraction(1))
+        self.assertEqual(analyzer.countTI('b', 3), Fraction('4/3'))
+        self.assertEqual(analyzer.countTI('a', 3), Fraction('2/3'))
 
 
 if __name__ == '__main__':
