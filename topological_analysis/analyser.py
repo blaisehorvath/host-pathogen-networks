@@ -88,17 +88,42 @@ class TopologyAnalyser:
 
         return unitStrenghtDict
 
-    def pathFinder(self, depth, sourceNode, targetNode, path, collectedPathes):
+    def pathFinder(self, depth, sourceNode, targetNode, path, collectedPathways):
+        """
+        This function returns every possible pathway between two nodes with a given length.
+        :param depth: lenght of the required pathways
+        :param sourceNode:
+        :param targetNode:
+        :param path: needed because of recursion
+        :param collectedPathways: dirty solution for imperatively collecting the pathways
+        :return: a list of pathways
+        """
         if len(path) == 0:
+            path.append(sourceNode)
             depth -= 1
         if depth == 0 and sourceNode == targetNode:
-            print path
-            collectedPathes.append(path)
-            return
+            stringPath = '-'.join(path)
+            collectedPathways.append(stringPath)
+            return path
         if depth == 0 and sourceNode != targetNode:
             return
         for neighbourNode in self.getFirstNeighboursSet(sourceNode):
             path.append(neighbourNode)
-            self.pathFinder(depth-1, neighbourNode, targetNode, path, collectedPathes)
+            self.pathFinder(depth-1, neighbourNode, targetNode, path, collectedPathways)
             path.pop(-1)
 
+    def getNthPathwaysForNodes(self, steps):
+        pathways = {}
+
+        for node in self.graph.nodes():
+
+            pathways[node] = []
+
+            nthNeighbours = self.getNthNeighbours(node, steps-1)
+
+            for neighbour in nthNeighbours:
+                collectedPathways = []
+                self.pathFinder(steps, node,neighbour,[], collectedPathways)
+                pathways[node] += collectedPathways
+
+        return pathways
