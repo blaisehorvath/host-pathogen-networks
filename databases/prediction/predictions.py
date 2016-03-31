@@ -3,7 +3,7 @@ __author__ = 'blaise'
 # parsing arguments
 import argparse
 
-parser = argparse.ArgumentParser(description='Convert downloaded RNA files to Mitab SQLite')
+parser = argparse.ArgumentParser(description='Convert edgelists to Mitab SQLite')
 parser.add_argument('--source-file', required=True, metavar="SourceFile", type=str,
                     help="The location of the source file for nodes")
 parser.add_argument('--outfile', required=True, metavar="OutputFile", type=str,
@@ -73,7 +73,7 @@ with open(args.source_file) as source_file:
             'first_author': "",
             'publication_ids': "",
             'interaction_types': "",
-            'source_db': "salmonella_predictions",
+            'source_db': "prediction-DD",
             'interaction_identifiers': "",
             'confidence_scores': "",
             'layer': "0"

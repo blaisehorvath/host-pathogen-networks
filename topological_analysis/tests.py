@@ -62,16 +62,16 @@ class TestGraphAnalyser(unittest.TestCase):
         self.assertEqual(analyzer.getEdgesFromPathway('a-b-c'), ['a-b', 'b-c'])
 
     def testcountPathwayStrength(self):
-        self.assertEqual(analyzer.countPathwayStrength('e-a-e'), Fraction('1/3'))
-        self.assertEqual(analyzer.countPathwayStrength('e-b-f'), Fraction('1/6'),)
+        self.assertEqual(analyzer.countPathwayStrength('e-a-e'), float(Fraction('1/3')))
+        self.assertEqual(analyzer.countPathwayStrength('e-b-f'), float(Fraction('1/6')))
 
     def testGetNStepPathwaysForNode(self):
         self.assertEqual(analyzer.getPathWaysToNthNeighbours('e',3), ['e-a-e', 'e-c-e', 'e-b-e', 'e-c-f', 'e-b-f'])
 
     def testCountTI(self):
-        self.assertEqual(analyzer.countTI('e',3), Fraction(1))
-        self.assertEqual(analyzer.countTI('b', 3), Fraction('4/3'))
-        self.assertEqual(analyzer.countTI('a', 3), Fraction('2/3'))
+        self.assertAlmostEqual(analyzer.countTI('e',3), Fraction(1))
+        self.assertAlmostEqual(analyzer.countTI('b', 3), Fraction('4/3'))
+        self.assertAlmostEqual(analyzer.countTI('a', 3), Fraction('2/3'))
 
 
 if __name__ == '__main__':

@@ -149,7 +149,7 @@ class TopologyAnalyser:
 
     def countPathwayStrength(self, pathway):
         """
-        This function returns the strength of a pathway
+        This function returns the strength of a pathway as a floating point number
         :param pathway:
         :return:
         """
@@ -160,7 +160,7 @@ class TopologyAnalyser:
         for edge in edges:
             product *= self.edgeStrength[edge]
 
-        return product
+        return float(product)
 
     def getPathWaysToNthNeighbours(self, node, n):
         """
