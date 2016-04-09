@@ -196,3 +196,23 @@ class TopologyAnalyser:
             ti += self.countPathwayStrength(pathway)
 
         return ti
+
+    def getNodeDirectStrengths(self):
+        """
+        This function returns the direct topological strength (1 step) strength of a node
+        :param node:
+        :return:
+        """
+
+        nodeStrengthDict = {}
+
+        for edge_name, edge_strenght in self.edgeStrength.iteritems():
+                source = edge_name.split('-')[0]
+
+                if source in nodeStrengthDict:
+                    nodeStrengthDict[source] += edge_strenght
+
+                else:
+                    nodeStrengthDict[source] = edge_strenght
+
+        return  nodeStrengthDict

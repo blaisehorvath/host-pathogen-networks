@@ -73,6 +73,10 @@ class TestGraphAnalyser(unittest.TestCase):
         self.assertAlmostEqual(analyzer.countTI('b', 3), Fraction('4/3'))
         self.assertAlmostEqual(analyzer.countTI('a', 3), Fraction('2/3'))
 
+    def testgetNodeDirectStrength(self):
+        self.assertEqual(analyzer.getNodeDirectStrengths()['a'], Fraction('1/3'))
+        self.assertEqual(analyzer.getNodeDirectStrengths()['b'], Fraction('2/3'))
+
 
 if __name__ == '__main__':
     unittest.main()
